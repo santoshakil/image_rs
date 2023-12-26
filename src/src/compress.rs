@@ -71,5 +71,23 @@ mod tests {
         let output = 1024 * 200;
         let result = compress(path.to_path_buf(), output);
         assert!(result.is_ok());
+        let path = result.unwrap();
+        let path = std::ffi::CString::new(path).unwrap();
+        let path = path.into_raw();
+        let result = unsafe { std::ffi::CStr::from_ptr(path).to_str().unwrap() };
+        assert_eq!(result, "image/compressed_4mb.jpg");
+    }
+
+    #[test]
+    fn test_compress_c() {
+        let path = Path::new("image/4mb.jpg");
+        let output = 1024 * 200;
+        let result = compress(path.to_path_buf(), output);
+        assert!(result.is_ok());
+        let path = result.unwrap();
+        let path = std::ffi::CString::new(path).unwrap();
+        let path = path.into_raw();
+        let result = unsafe { std::ffi::CStr::from_ptr(path).to_str().unwrap() };
+        assert_eq!(result, "image/compressed_4mb.jpg");
     }
 }
