@@ -1,5 +1,22 @@
 use std::{error::Error, fs, io::Seek, path::PathBuf};
 
+#[no_mangle]
+pub extern "C" fn compress_c(
+    path: *const std::os::raw::c_char,
+    output: usize,
+) -> *const std::os::raw::c_char {
+    let path = unsafe { std::ffi::CStr::from_ptr(path).to_str().unwrap() };
+    let path = PathBuf::from(path);
+    let result = compress(path, output);
+    match result {
+        Ok(path) => {
+            let path = std::ffi::CString::new(path).unwrap();
+            path.into_raw()
+        }
+        Err(_) => std::ptr::null(),
+    }
+}
+
 pub fn compress(path: PathBuf, output: usize) -> Result<String, Box<dyn Error>> {
     let img = image::open(&path)?;
     let mut image = img.to_rgb8();
