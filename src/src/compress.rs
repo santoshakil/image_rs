@@ -1,29 +1,5 @@
 use std::{error::Error, fs, io::Seek, path::PathBuf};
 
-// Future<File?> compressImage(String file, int size, Directory tempDir) async {
-//   final fileName = basename(file);
-//   var image = img.decodeImage(await File(file).readAsBytes())!;
-//   final temp = File(join(tempDir.path, 'compressed_$fileName'));
-//   await temp.writeAsBytes(img.encodeJpg(image, quality: 80));
-//   int fileSize = await temp.length();
-//   if (fileSize <= size) return temp;
-//   while (fileSize > size) {
-//     var scale = sqrt(size / fileSize);
-//     scale = min(scale, 0.95);
-//     final compressedImage = img.copyResize(
-//       image,
-//       width: (image.width * scale).round(),
-//       height: (image.height * scale).round(),
-//     );
-//     await temp.writeAsBytes(img.encodeJpg(compressedImage, quality: 80));
-//     fileSize = await temp.length();
-//     debugPrint('Compressed image size: ${fileSize / 1024}KB');
-//     image = compressedImage;
-//   }
-//   debugPrint('Final compressed image size: ${fileSize / 1024}KB\n');
-//   return temp;
-// }
-
 pub fn compress(path: PathBuf, output: usize) -> Result<String, Box<dyn Error>> {
     let img = image::open(&path)?;
     let mut image = img.to_rgb8();
